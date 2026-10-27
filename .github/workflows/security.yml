@@ -1,0 +1,98 @@
+name: Security
+
+on:
+  push:
+    branches:
+      - main
+      - '*.x'
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  constraints:
+    name: Security constraints
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP (patched floor)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4.27'
+          coverage: none
+          tools: composer:v2
+
+      - name: Assert composer.json PHP floor (CVE-2026-109618/109619)
+        run: |
+          set -euo pipefail
+          php -r '
+            $json = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR);
+            $php = $json["require"]["php"] ?? "";
+            if ($php !== "^8.3.36 || ^8.4.27 || ^8.5.12") {
+              fwrite(STDERR, "Unexpected php constraint: {$php}\n");
+              exit(1);
+            }
+            $livewire = $json["require"]["livewire/livewire"] ?? "";
+            if ($livewire !== "^4.4.8") {
+              fwrite(STDERR, "Unexpected livewire constraint: {$livewire}\n");
+              exit(1);
+            }
+            echo "OK php={$php} livewire={$livewire}\n";
+          '
+
+      - name: Install dependencies
+        run: |
+          composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Assert resolved Livewire is patched (GHSA-mhf7-xp6r-6qrc)
+        run: |
+          set -euo pipefail
+          VERSION=$(composer show livewire/livewire --format=json | php -r 'echo json_decode(stream_get_contents(STDIN))->versions[0];')
+          echo "Resolved livewire/livewire ${VERSION}"
+          php -r '
+            $v = getenv("VERSION") ?: "'"${VERSION}"'";
+            if (version_compare(ltrim($v, "v"), "4.4.8", "<")) {
+              fwrite(STDERR, "Livewire must be >= 4.4.8, got {$v}\n");
+              exit(1);
+            }
+          '
+
+      - name: Composer audit
+        run: composer audit --no-interaction
+
+  gitleaks:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        env:
+          GITLEAKS_VERSION: '8.24.3'
+        run: |
+          set -euo pipefail
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz gitleaks
+          sudo mv gitleaks /usr/local/bin/gitleaks
+
+      - name: Scan working tree
+        run: |
+          gitleaks detect --no-git --source . --config .gitleaks.toml --verbose --redact --exit-code 1
+
+      - name: Scan commits in this pull request
+        if: github.event_name == 'pull_request'
+        run: |
+          gitleaks detect --source . --config .gitleaks.toml \
+            --log-opts="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}" \
+            --verbose --redact --exit-code 1

@@ -24,6 +24,13 @@
 
 This package provides the core functionality of [Cachet](https://github.com/cachethq/cachet) and may be installed into existing Laravel applications. Cachet 3.x will ship as a standalone Laravel application that requires this package.
 
+> **Fork notice:** This repository (`JulianUO/cachet-core`) is a fork of [`cachethq/core`](https://github.com/cachethq/core). It is **not** an official Cachet product. We are grateful to **James Brooks**, **Alt Three Services Limited**, and CachetHQ for Cachet. The Composer package name remains `cachethq/core` so host apps can consume this fork via a VCS repository entry.
+>
+> Security pins in this fork (validated in CI):
+> - PHP `^8.3.36 || ^8.4.27 || ^8.5.12` (CVE-2026-109618 / CVE-2026-109619)
+> - `livewire/livewire` `^4.4.8` (GHSA-mhf7-xp6r-6qrc)
+> - Español (Argentina) `es_AR` locale registered in `config/cachet.php`
+
 ## Project Status
 
 Cachet 3.x is currently in development and is not yet completely ready for production use. We are actively working on the project and will provide updates as we progress.

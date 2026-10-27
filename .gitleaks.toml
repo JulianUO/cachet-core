@@ -1,0 +1,14 @@
+title = "cachet-core"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Tests, docs, and package config fixtures"
+paths = [
+    '''(^|/)tests/''',
+    '''(^|/)docs/''',
+    '''(^|/)workbench/''',
+    '''(^|/)\.gitleaks\.toml$''',
+    '''(^|/)phpunit\.xml''',
+]
