@@ -15,11 +15,11 @@
     ],
     "homepage": "https://cachethq.io",
     "support": {
-        "issues": "https://github.com/cachethq/core/issues",
-        "source": "https://github.com/cachethq/core"
+        "issues": "https://github.com/JulianUO/cachet-core/issues",
+        "source": "https://github.com/JulianUO/cachet-core"
     },
     "require": {
-        "php": "^8.3",
+        "php": "^8.3.36 || ^8.4.27 || ^8.5.12",
         "ext-simplexml": "*",
         "cachethq/badger": "^5.0",
         "doctrine/dbal": "^3.6",
@@ -34,6 +34,7 @@
         "illuminate/support": "^12.41.1|^13.0",
         "laravel/mcp": "^0.8",
         "laravel/sanctum": "^4.0",
+        "livewire/livewire": "^4.4.8",
         "nesbot/carbon": "^2.70|^3.0",
         "spatie/laravel-data": "^4.11",
         "spatie/laravel-query-builder": "^6.3",
