@@ -106,9 +106,27 @@ class ManageCachet extends SettingsPage
                         Toggle::make('display_graphs')
                             ->label(__('cachet::settings.manage_cachet.toggles.display_graphs'))
                             ->helperText(__('cachet::settings.manage_cachet.toggles.display_graphs_helper')),
-                        Toggle::make('display_system_status')
-                            ->label(__('cachet::settings.manage_cachet.toggles.display_system_status'))
-                            ->helperText(__('cachet::settings.manage_cachet.toggles.display_system_status_helper')),
+                        Grid::make(1)
+                            ->schema([
+                                Toggle::make('display_system_status')
+                                    ->label(__('cachet::settings.manage_cachet.toggles.display_system_status'))
+                                    ->helperText(__('cachet::settings.manage_cachet.toggles.display_system_status_helper'))
+                                    ->reactive(),
+                                TextInput::make('system_status_days')
+                                    ->numeric()
+                                    ->integer()
+                                    ->required()
+                                    ->label(__('cachet::settings.manage_cachet.system_status_days_label'))
+                                    ->helperText(__('cachet::settings.manage_cachet.system_status_days_helper', [
+                                        'min' => AppSettings::SYSTEM_STATUS_MIN_DAYS,
+                                        'max' => AppSettings::SYSTEM_STATUS_MAX_DAYS,
+                                    ]))
+                                    ->minValue(AppSettings::SYSTEM_STATUS_MIN_DAYS)
+                                    ->maxValue(AppSettings::SYSTEM_STATUS_MAX_DAYS)
+                                    ->step(1)
+                                    ->suffix(__('cachet::settings.manage_cachet.recent_incidents_days_suffix_days'))
+                                    ->hidden(fn (Get $get) => $get('display_system_status') !== true),
+                            ]),
                         Toggle::make('enable_external_dependencies')
                             ->label(__('cachet::settings.manage_cachet.toggles.enable_external_dependencies'))
                             ->helperText(__('cachet::settings.manage_cachet.toggles.enable_external_dependencies_helper')),

@@ -58,6 +58,20 @@ class AppSettings extends Settings
 
     public bool $display_system_status = false;
 
+    public int $system_status_days = self::SYSTEM_STATUS_MAX_DAYS;
+
+    public const SYSTEM_STATUS_MIN_DAYS = 7;
+
+    public const SYSTEM_STATUS_MAX_DAYS = 90;
+
+    /**
+     * Number of days shown by the system status uptime bars, kept within the supported range.
+     */
+    public function systemStatusDays(): int
+    {
+        return max(self::SYSTEM_STATUS_MIN_DAYS, min(self::SYSTEM_STATUS_MAX_DAYS, $this->system_status_days));
+    }
+
     public static function group(): string
     {
         return 'app';
