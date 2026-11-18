@@ -59,6 +59,26 @@ it('saves the system status display setting', function () {
     expect(app(AppSettings::class)->refresh()->display_system_status)->toBeTrue();
 });
 
+it('saves the system status days setting', function () {
+    expect(app(AppSettings::class)->system_status_days)->toBe(90);
+
+    livewire(ManageCachet::class)
+        ->fillForm(['display_system_status' => true, 'system_status_days' => 30])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect(app(AppSettings::class)->refresh()->system_status_days)->toBe(30);
+});
+
+it('validates the system status days range', function (int $days) {
+    livewire(ManageCachet::class)
+        ->fillForm(['display_system_status' => true, 'system_status_days' => $days])
+        ->call('save')
+        ->assertHasFormErrors(['system_status_days']);
+
+    expect(app(AppSettings::class)->refresh()->system_status_days)->toBe(90);
+})->with([6, 91]);
+
 it('saves the status page title and about visibility settings', function () {
     expect(app(AppSettings::class))
         ->show_site_name->toBeFalse()

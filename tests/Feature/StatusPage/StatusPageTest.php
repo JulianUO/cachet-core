@@ -232,6 +232,33 @@ it('renders duration-based uptime for the rolling 90-day system status', functio
         ->and($page)->toContain('Sep 20, 2026: Major outage');
 });
 
+it('renders the configured number of system status days', function (int $configured, int $expected) {
+    Carbon::setTestNow('2026-09-30 12:00:00');
+
+    $settings = app(AppSettings::class);
+    $settings->display_system_status = true;
+    $settings->system_status_days = $configured;
+    $settings->save();
+
+    $group = ComponentGroup::factory()->create(['name' => 'APIs']);
+    Component::factory()->create([
+        'name' => 'Responses',
+        'component_group_id' => $group->id,
+        'status' => ComponentStatusEnum::operational,
+        'created_at' => now()->subYear(),
+    ]);
+
+    $page = $this->get(route('cachet.status-page'))->assertOk()->getContent();
+
+    expect(substr_count($page, "grid-template-columns: repeat({$expected},"))->toBe(2);
+})->with([
+    'minimum' => [7, 7],
+    'custom' => [30, 30],
+    'maximum' => [90, 90],
+    'below range is clamped' => [1, 7],
+    'above range is clamped' => [365, 90],
+]);
+
 it('includes incident and maintenance events with their standard icons', function () {
     Carbon::setTestNow('2026-09-30 12:00:00');
 

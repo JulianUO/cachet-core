@@ -17,6 +17,8 @@ return [
         'refresh_rate_helper' => 'Con qué frecuencia se recarga la página de estado. Déjalo en blanco para desactivar.',
         'refresh_rate_label_input_suffix_seconds' => 'segundos',
         'recent_incidents_days_suffix_days' => 'días',
+        'system_status_days_label' => 'Días del estado del sistema',
+        'system_status_days_helper' => 'Cuántos días de disponibilidad mostrar en el estado del sistema (de :min a :max).',
         'toggles' => [
             'support_cachet' => 'Apoyar Cachet',
             'support_cachet_helper' => 'Muestra un pequeño enlace que anima a los visitantes a apoyar el desarrollo de Cachet.',
@@ -29,6 +31,8 @@ return [
             'show_about_helper' => 'Muestra el contenido de Acerca de este sitio en la página de estado pública.',
             'display_graphs' => 'Mostrar Gráficos',
             'display_graphs_helper' => 'Renderiza gráficos de métricas en la página de estado.',
+            'display_system_status' => 'Mostrar estado del sistema',
+            'display_system_status_helper' => 'Muestra el historial de disponibilidad de grupos de componentes y componentes.',
             'only_show_disrupted_days' => 'Mostrar Solo Días con Problemas',
             'only_show_disrupted_days_helper' => 'Oculta los días sin incidentes registrados en la línea de tiempo.',
             'recent_incidents_only' => 'Mostrar Solo Incidentes Recientes',

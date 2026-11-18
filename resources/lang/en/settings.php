@@ -17,6 +17,8 @@ return [
         'refresh_rate_helper' => 'How often the status page reloads itself. Leave blank to disable.',
         'refresh_rate_label_input_suffix_seconds' => 'seconds',
         'recent_incidents_days_suffix_days' => 'days',
+        'system_status_days_label' => 'System status days',
+        'system_status_days_helper' => 'How many days of uptime to show in the system status (:min to :max).',
         'toggles' => [
             'support_cachet' => 'Support Cachet',
             'support_cachet_helper' => 'Display a small link encouraging visitors to support Cachet\'s development.',
@@ -29,7 +31,7 @@ return [
             'display_graphs' => 'Display graphs',
             'display_graphs_helper' => 'Render metric charts on the status page.',
             'display_system_status' => 'Display system status',
-            'display_system_status_helper' => 'Show 90 days of uptime for component groups and components.',
+            'display_system_status_helper' => 'Show uptime history for component groups and components.',
             'enable_external_dependencies' => 'Enable external dependencies',
             'enable_external_dependencies_helper' => 'Allow Cachet to load assets such as fonts from external services.',
             'only_show_disrupted_days' => 'Only show disrupted days',
